@@ -1,0 +1,17 @@
+version: '2'
+services:
+  database:
+    image: mysql
+    ports:
+    - "2012:3306"  # cổng local là 2012, để cổng khác truy cập là 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=demodb
+  web:
+    image: nginx
+  jenkins:
+    image: "jenkins:2.60.3"
+    ports:
+    - "8081:8080"
