@@ -1,0 +1,42 @@
+version: '3.9' # Xác định version của docker-compose
+services: # Liệt kê các service
+  postgresql: # tên servercie
+    container_name: postgresql # Đặt tên container
+    image: postgres:14.2 # service từ image nào
+    volumes: # Xác định volumes của service
+       - ./postgresql/:/var/lib/postgresql/data/ # ánh xạ đường dẫn trên host để sử dụng trên container
+    environment: # các tham số của môi trường
+      - POSTGRES_PASSWORD=admin@123
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    command: postgres -c 'max_connections=1000' # khai báo command nào sẽ chạy khi container được chạy
+    restart: always # Luôn khởi động lại khi xảy ra lỗi hoặc bị stop
+    ports:
+      - 1001:5432 # thiết lập port cho container, maping port của container với port của host
+    networks: # Xác định network muốn sử dụng
+      - dbms # đặt tên network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin@123
+    restart: always
+    ports:
+      - 1002:80
+    volumes:
+      - ./pgadmin_data:/root/.pgadmin
+    networks:
+      - dbms
+volumes: # liệt kê các volumes sử dụng
+  postgresql: {}
+  pgadmin_data: {}
+
+networks:
+  dbms:
+    name: dbms
+    # external: true
+  # dbms:
+  #   driver: bridge
+  #   name: dbms
+  #   external: true

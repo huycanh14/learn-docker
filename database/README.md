@@ -1,0 +1,1 @@
+Chạy lệnh `docker compose up -d --buidl`

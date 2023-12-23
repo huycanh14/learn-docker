@@ -1,0 +1,32 @@
+version: "3.9"  # Xác định version của docker-compose
+
+services: # Liệt kê các service
+  login-app-backend: # tên servercie
+    build: ./login-app-backend # thư mục chứa file Dockerfile
+    container_name: backend # Đặt tên container
+    ports:
+      - "1003:3000" # thiết lập port cho container, maping port của container với port của host
+    volumes:
+      - ./login-app-backend/app.js:/app/app.js  # ánh xạ đường dẫn trên host để sử dụng trên container
+    environment: # các tham số của môi trường
+      - PG_HOST=postgresql
+      - PG_USER=postgres
+      - PG_PORT=5432
+      - PG_PASSWORD=admin@123
+      - PG_DATABASE=Test1
+    networks:  # Xác định network muốn sử dụng
+      - dbms
+    
+  login-app:
+    build: ./login-app # thư mục chứa file Dockerfile
+    container_name: frontend # Đặt tên container
+    ports:
+      - "1004:3000"  # thiết lập port cho container, maping port của container với port của host
+    networks:  # Xác định network muốn sử dụng
+      - dbms
+    args:  # các tham số của môi trường
+      - VITE_BASE_API=http://backend:3000
+
+networks:
+  dbms:
+    name: dbms

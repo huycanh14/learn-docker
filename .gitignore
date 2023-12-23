@@ -1,0 +1,3 @@
+database/pg*
+database/post*
+*.vscode*
